@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TheAlmighties</title>
+<style>
+  :root{
+    --bg:#f4f4f2; --card:#ffffff; --ink:#1f2328; --muted:#6b7280;
+    --line:#d9d9d4; --accent:#2b3a4a; --accent-hover:#1c2733; --err:#9b2c2c; --ok:#2f6b3f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;min-height:100%}
+  body{font-family:Georgia,"Times New Roman",serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;min-height:100vh}
+  header{padding:22px 16px 8px;text-align:center;position:relative;z-index:1}
+  header h1{margin:0;font-size:1.7rem;letter-spacing:.08em;font-weight:600}
+  header p{margin:4px 0 0;color:var(--muted);font-size:.9rem;font-style:italic}
+  main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:16px;position:relative;z-index:1}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+  label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
+  input[type=password],textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:4px;font:inherit;background:#fff;color:var(--ink)}
+  input[type=file]{width:100%;font:inherit;font-size:.9rem}
+  textarea{min-height:120px;resize:vertical}
+  input:focus,textarea:focus{outline:2px solid #c9d1d9;border-color:#9aa5b1}
+  button{width:100%;margin-top:14px;padding:12px;border:0;border-radius:4px;background:var(--accent);color:#fff;font:inherit;font-size:1rem;cursor:pointer}
+  button:hover{background:var(--accent-hover)}
+  button:disabled{opacity:.6;cursor:not-allowed}
+  button.link{background:none;color:var(--muted);font-size:.85rem;margin-top:8px;text-decoration:underline}
+  .msg{margin-top:12px;font-size:.9rem;min-height:1.2em}
+  .err{color:var(--err)} .ok{color:var(--ok)}
+  .defs{margin-top:18px}
+  .defs .d{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px;padding:12px 14px;margin-bottom:10px;font-size:.92rem;line-height:1.5}
+  .hidden{display:none}
+  .progress{height:6px;background:#e7e7e3;border-radius:3px;margin-top:12px;overflow:hidden}
+  .progress>div{height:100%;width:0;background:var(--accent);transition:width .2s}
+  .fileinfo{font-size:.82rem;color:var(--muted);margin-top:6px}
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:flex;flex-wrap:wrap;align-content:space-around;justify-content:space-around;padding:30px;opacity:.07}
+  #bg span{font-size:1.6rem;letter-spacing:.1em;padding:18px 22px;transform:rotate(-12deg);white-space:nowrap}
+  footer{position:relative;z-index:1;border-top:1px solid var(--line);background:var(--card);padding:16px;text-align:center;font-size:.85rem;color:var(--muted);line-height:1.7}
+  footer a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
+  footer .links a{margin:0 8px}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+
+<header>
+  <h1>THE ALMIGHTIES</h1>
+  <p>A private portal for trusted communication</p>
+</header>
+
+<main>
+  <!-- Lock screen -->
+  <section id="lock">
+    <div class="card">
+      <label for="pw">Enter Hacky's Password to unlock the portal</label>
+      <input type="password" id="pw" autocomplete="current-password" />
+      <button id="unlockBtn">Unlock</button>
+      <div id="lockMsg" class="msg err"></div>
+    </div>
+    <div class="defs">
+      <div class="d" id="defAlmighty">Loading…</div>
+      <div class="d" id="defAlmighties">Loading…</div>
+    </div>
+  </section>
+
+  <!-- Portal -->
+  <section id="portal" class="hidden">
+    <div class="card">
+      <label for="text">Message</label>
+      <textarea id="text" placeholder="Write your message…"></textarea>
+      <div style="margin-top:14px">
+        <label for="file">Attach a file (any type, up to 200 MB)</label>
+        <input type="file" id="file" />
+        <div class="fileinfo" id="fileinfo"></div>
+      </div>
+      <div class="progress hidden" id="prog"><div id="bar"></div></div>
+      <button id="sendBtn">Send to all</button>
+      <button class="link" id="lockBtn">Lock portal</button>
+      <div id="sendMsg" class="msg"></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div>Hacky is the name of Ankit Verma. He's fond of cyber technologies.</div>
+  <div class="links">
+    <a href="https://t.me/HackyNetworksStudio" target="_blank" rel="noopener">Contact on Telegram</a>
+    <a href="https://t.me/TheAlmighties_Robot" target="_blank" rel="noopener">Telegram Bot</a>
+  </div>
+</footer>
+
+<script>
+const MAX = 200 * 1024 * 1024;
+const CHUNK = 50 * 1024 * 1024; // 50MB parts (Cloudflare body limit is 100MB)
+const $ = (id) => document.getElementById(id);
+let PW = "";
+
+function showPortal(members){
+  $("lock").classList.add("hidden");
+  $("portal").classList.remove("hidden");
+  const bg = $("bg");
+  bg.innerHTML = "";
+  (members || []).forEach(n => {
+    for (let i = 0; i < 3; i++){
+      const s = document.createElement("span");
+      s.textContent = n;
+      bg.appendChild(s);
+    }
+  });
+}
+function showLock(){
+  PW = "";
+  try { sessionStorage.removeItem("pw"); } catch {}
+  $("bg").innerHTML = "";
+  $("portal").classList.add("hidden");
+  $("lock").classList.remove("hidden");
+  $("pw").value = "";
+}
+
+async function loadDefs(){
+  try{
+    const r = await fetch("/api/config");
+    const d = await r.json();
+    $("defAlmighty").textContent = d.almightyDef;
+    $("defAlmighties").textContent = d.almightiesDef;
+  }catch{
+    $("defAlmighty").textContent = "Almighty (adjective): having complete power; unlimited in authority.";
+    $("defAlmighties").textContent = "Almighties (noun, plural): a collective united by trust and shared purpose.";
+  }
+}
+
+async function tryLogin(password, silent){
+  try{
+    const r = await fetch("/api/login", {
+      method: "POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({password})
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok){
+      if (!silent) $("lockMsg").textContent = d.error || "Incorrect password.";
+      return false;
+    }
+    PW = password;
+    try { sessionStorage.setItem("pw", password); } catch {}
+    showPortal(d.members);
+    return true;
+  }catch{
+    if (!silent) $("lockMsg").textContent = "Network error. Try again.";
+    return false;
+  }
+}
+
+$("unlockBtn").onclick = async () => {
+  $("lockMsg").textContent = "";
+  const p = $("pw").value;
+  if (!p) { $("lockMsg").textContent = "Please enter the password."; return; }
+  $("unlockBtn").disabled = true;
+  await tryLogin(p, false);
+  $("unlockBtn").disabled = false;
+};
+$("pw").addEventListener("keydown", e => { if (e.key === "Enter") $("unlockBtn").click(); });
+$("lockBtn").onclick = showLock;
+
+$("file").onchange = () => {
+  const f = $("file").files[0];
+  if (!f) { $("fileinfo").textContent = ""; return; }
+  const mb = (f.size / 1048576).toFixed(1);
+  if (f.size > MAX){
+    $("fileinfo").textContent = "File is " + mb + " MB — too large (max 200 MB).";
+    $("file").value = "";
+  } else {
+    $("fileinfo").textContent = f.name + " — " + mb + " MB";
+  }
+};
+
+const H = () => ({"x-portal-password": PW});
+
+async function uploadFile(file, onProgress){
+  let r = await fetch("/api/file/init", {
+    method: "POST",
+    headers: {...H(), "Content-Type":"application/json"},
+    body: JSON.stringify({name:file.name, type:file.type, size:file.size})
+  });
+  let d = await r.json();
+  if (!d.ok) throw new Error(d.error || "Upload init failed");
+  const {key, uploadId} = d;
+
+  const parts = [];
+  const total = Math.max(1, Math.ceil(file.size / CHUNK));
+  for (let i = 0; i < total; i++){
+    const blob = file.slice(i * CHUNK, Math.min(file.size, (i + 1) * CHUNK));
+    const q = new URLSearchParams({key, uploadId, n: String(i + 1)});
+    const pr = await fetch("/api/file/part?" + q, {method:"PUT", headers:H(), body:blob});
+    const pd = await pr.json();
+    if (!pd.ok) throw new Error(pd.error || "Chunk upload failed");
+    parts.push({partNumber: pd.partNumber, etag: pd.etag});
+    onProgress((i + 1) / total);
+  }
+
+  r = await fetch("/api/file/complete", {
+    method: "POST",
+    headers: {...H(), "Content-Type":"application/json"},
+    body: JSON.stringify({key, uploadId, parts})
+  });
+  d = await r.json();
+  if (!d.ok) throw new Error(d.error || "Upload completion failed");
+  return {key: d.key, size: d.size};
+}
+
+$("sendBtn").onclick = async () => {
+  const msgEl = $("sendMsg");
+  msgEl.className = "msg"; msgEl.textContent = "";
+  const message = $("text").value.trim();
+  const file = $("file").files[0];
+  if (!message && !file){ msgEl.className = "msg err"; msgEl.textContent = "Write a message or attach a file."; return; }
+
+  $("sendBtn").disabled = true;
+  try{
+    let fileInfo = {};
+    if (file){
+      $("prog").classList.remove("hidden");
+      $("bar").style.width = "0%";
+      msgEl.textContent = "Uploading file…";
+      const up = await uploadFile(file, p => { $("bar").style.width = Math.round(p * 100) + "%"; });
+      fileInfo = {fileKey: up.key, fileName: file.name, fileSize: up.size};
+    }
+    msgEl.textContent = "Sending…";
+    const r = await fetch("/api/share", {
+      method: "POST",
+      headers: {...H(), "Content-Type":"application/json"},
+      body: JSON.stringify({message, ...fileInfo})
+    });
+    const d = await r.json();
+    if (!r.ok || !d.ok) throw new Error(d.error || "Send failed");
+    msgEl.className = "msg ok";
+    msgEl.textContent = "Delivered to " + d.sent + " chat(s)" + (d.failed ? " (" + d.failed + " failed)" : "") + ".";
+    $("text").value = ""; $("file").value = ""; $("fileinfo").textContent = "";
+  }catch(e){
+    msgEl.className = "msg err";
+    msgEl.textContent = e.message || "Something went wrong.";
+  }
+  $("prog").classList.add("hidden");
+  $("sendBtn").disabled = false;
+};
+
+loadDefs();
+try {
+  const saved = sessionStorage.getItem("pw");
+  if (saved) tryLogin(saved, true);
+} catch {}
+</script>
+</body>
+</html>
