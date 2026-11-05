@@ -39,6 +39,10 @@
   footer{position:relative;z-index:1;border-top:1px solid var(--line);background:var(--card);padding:16px;text-align:center;font-size:.85rem;color:var(--muted);line-height:1.7}
   footer a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
   footer .links a{margin:0 8px}
+  .keys{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);line-height:2}
+  kbd{font-family:Consolas,Menlo,monospace;font-size:.78rem;background:#f1f1ee;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;color:var(--ink)}
+  body.drag #portal .card{outline:2px dashed var(--accent)}
+  @media (max-width:700px){.keys{display:none}}
 </style>
 </head>
 <body>
@@ -54,9 +58,10 @@
   <section id="lock">
     <div class="card">
       <label for="pw">Enter Hacky's Password to unlock the portal</label>
-      <input type="password" id="pw" autocomplete="current-password" />
+      <input type="password" id="pw" autocomplete="current-password" autofocus />
       <button id="unlockBtn">Unlock</button>
       <div id="lockMsg" class="msg err"></div>
+      <div class="keys"><kbd>Enter</kbd> Unlock</div>
     </div>
     <div class="defs">
       <div class="d" id="defAlmighty">Loading…</div>
@@ -78,6 +83,11 @@
       <button id="sendBtn">Send to all</button>
       <button class="link" id="lockBtn">Lock portal</button>
       <div id="sendMsg" class="msg"></div>
+      <div class="keys">
+        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> Send &nbsp; <kbd>Alt</kbd>+<kbd>A</kbd> Attach file &nbsp;
+        <kbd>Alt</kbd>+<kbd>M</kbd> Message box &nbsp; <kbd>Alt</kbd>+<kbd>X</kbd> Lock &nbsp;
+        <kbd>Esc</kbd> Remove file &nbsp; Drag &amp; drop a file anywhere
+      </div>
     </div>
   </section>
 </main>
@@ -96,6 +106,7 @@ const $ = (id) => document.getElementById(id);
 let PW = "";
 
 function showPortal(members){
+  setTimeout(()=>{ const t=document.getElementById("text"); if(t) t.focus(); },50);
   $("lock").classList.add("hidden");
   $("portal").classList.remove("hidden");
   const bg = $("bg");
@@ -216,6 +227,36 @@ $("sendBtn").onclick = async () => {
   $("prog").classList.add("hidden");
   $("sendBtn").disabled = false;
 };
+
+// ---------- Keyboard shortcuts (PC) ----------
+function setFile(f){
+  if (!f) return;
+  if (f.size > MAX){
+    $("fileinfo").textContent = "File is " + (f.size/1048576).toFixed(1) + " MB — too large (max 50 MB).";
+    return;
+  }
+  const dt = new DataTransfer(); dt.items.add(f); $("file").files = dt.files;
+  $("fileinfo").textContent = f.name + " — " + (f.size/1048576).toFixed(1) + " MB";
+}
+function clearFile(){ $("file").value = ""; $("fileinfo").textContent = ""; }
+const portalOpen = () => !$("portal").classList.contains("hidden");
+
+document.addEventListener("keydown", e => {
+  if (!portalOpen()) { if (e.key === "/" && document.activeElement !== $("pw")) { e.preventDefault(); $("pw").focus(); } return; }
+  if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); if (!$("sendBtn").disabled) $("sendBtn").click(); }
+  else if (e.altKey && e.key.toLowerCase() === "a") { e.preventDefault(); $("file").click(); }
+  else if (e.altKey && e.key.toLowerCase() === "m") { e.preventDefault(); $("text").focus(); }
+  else if (e.altKey && e.key.toLowerCase() === "x") { e.preventDefault(); showLock(); }
+  else if (e.key === "Escape") { clearFile(); }
+});
+["dragenter","dragover"].forEach(t => document.addEventListener(t, e => { if (portalOpen()){ e.preventDefault(); document.body.classList.add("drag"); } }));
+["dragleave","drop"].forEach(t => document.addEventListener(t, e => { e.preventDefault(); document.body.classList.remove("drag"); }));
+document.addEventListener("drop", e => { if (portalOpen() && e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]); });
+document.addEventListener("paste", e => {
+  if (!portalOpen()) return;
+  const f = e.clipboardData && e.clipboardData.files && e.clipboardData.files[0];
+  if (f) setFile(f);
+});
 
 loadDefs();
 try {

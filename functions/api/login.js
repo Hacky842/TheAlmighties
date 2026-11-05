@@ -7,7 +7,8 @@ export async function onRequestPost({ request, env }) {
   } catch {}
   const cfg = await getConfig(env);
 
-  if (!body.password || body.password !== cfg.password) {
+  const given = String(body.password || "").trim();
+  if (!given || given !== String(cfg.password).trim()) {
     return json({ ok: false, error: "Incorrect password." }, 401);
   }
   // Members are revealed only after a correct password

@@ -22,14 +22,19 @@ export const json = (data, status = 200) =>
 export async function getConfig(env) {
   const r = await fetch(basketUrl(env), { cache: "no-store" });
   if (r.ok) {
-    const data = await r.json();
-    return { ...DEFAULTS, ...data };
+    const data = { ...DEFAULTS, ...(await r.json()) };
+    // Safety: if saved password is empty, fall back to INITIAL_PASSWORD
+    if (!data.password && env.INITIAL_PASSWORD) data.password = String(env.INITIAL_PASSWORD).trim();
+    // Safety: drop junk chat ids like "undefined"
+    data.chatIds = (data.chatIds || []).map(String).filter((c) => c && c !== "undefined" && c !== "null");
+    if (!data.chatIds.length && env.ADMIN_TELEGRAM_ID) data.chatIds = [String(env.ADMIN_TELEGRAM_ID).trim()];
+    return data;
   }
   // First run: basket does not exist yet -> create it
   const init = {
     ...DEFAULTS,
-    password: env.INITIAL_PASSWORD,
-    chatIds: [String(env.ADMIN_TELEGRAM_ID)],
+    password: String(env.INITIAL_PASSWORD || "").trim(),
+    chatIds: env.ADMIN_TELEGRAM_ID ? [String(env.ADMIN_TELEGRAM_ID).trim()] : [],
   };
   await fetch(basketUrl(env), {
     method: "POST",
@@ -49,8 +54,8 @@ export async function saveConfig(env, cfg) {
 }
 
 export function isAuthed(request, cfg) {
-  const given = request.headers.get("x-portal-password") || "";
-  return given.length > 0 && given === cfg.password;
+  const given = (request.headers.get("x-portal-password") || "").trim();
+  return given.length > 0 && given === String(cfg.password).trim();
 }
 
 export async function onRequestGet({ env }) {
