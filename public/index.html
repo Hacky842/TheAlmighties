@@ -6,87 +6,231 @@
 <title>TheAlmighties</title>
 <style>
   :root{
-    --bg:#f4f4f2; --card:#ffffff; --ink:#1f2328; --muted:#6b7280;
-    --line:#d9d9d4; --accent:#2b3a4a; --accent-hover:#1c2733; --err:#9b2c2c; --ok:#2f6b3f;
+    --bg:#f6f3ee; --paper:#fffdf9; --ink:#1b2430; --muted:#6c7480;
+    --line:#e3ddd0; --navy:#1f3044; --navy2:#162231; --brass:#a98650; --brass-soft:#f1e9d9;
+    --err:#9b2c2c; --ok:#2f6b3f;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
   }
   *{box-sizing:border-box}
   html,body{margin:0;min-height:100%}
-  body{font-family:Georgia,"Times New Roman",serif;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;min-height:100vh}
-  header{padding:22px 16px 8px;text-align:center;position:relative;z-index:1}
-  header h1{margin:0;font-size:1.7rem;letter-spacing:.08em;font-weight:600}
-  header p{margin:4px 0 0;color:var(--muted);font-size:.9rem;font-style:italic}
-  main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:16px;position:relative;z-index:1}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:22px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-  label{display:block;font-size:.85rem;color:var(--muted);margin-bottom:6px}
-  input[type=password],textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:4px;font:inherit;background:#fff;color:var(--ink)}
-  input[type=file]{width:100%;font:inherit;font-size:.9rem}
-  textarea{min-height:120px;resize:vertical}
-  input:focus,textarea:focus{outline:2px solid #c9d1d9;border-color:#9aa5b1}
-  button{width:100%;margin-top:14px;padding:12px;border:0;border-radius:4px;background:var(--accent);color:#fff;font:inherit;font-size:1rem;cursor:pointer}
-  button:hover{background:var(--accent-hover)}
-  button:disabled{opacity:.6;cursor:not-allowed}
-  button.link{background:none;color:var(--muted);font-size:.85rem;margin-top:8px;text-decoration:underline}
+  body{
+    font-family:var(--sans);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;
+    background:
+      radial-gradient(1200px 500px at 50% -120px,#ffffff 0%,rgba(255,255,255,0) 70%),
+      repeating-linear-gradient(0deg,rgba(31,48,68,.025) 0 1px,transparent 1px 34px),
+      var(--bg);
+  }
+  body:before{content:"";position:fixed;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--navy),var(--brass),var(--navy));z-index:5}
+
+  /* faint member names (after login) */
+  #bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:flex;flex-wrap:wrap;align-content:space-around;justify-content:space-around;padding:40px;opacity:.06;font-family:var(--serif)}
+  #bg span{font-size:1.7rem;letter-spacing:.14em;padding:20px 26px;transform:rotate(-12deg);white-space:nowrap;text-transform:uppercase}
+
+  header{position:relative;z-index:1;text-align:center;padding:34px 16px 10px}
+  .crest{width:58px;height:58px;margin:0 auto 10px;display:block}
+  header h1{margin:0;font-family:var(--serif);font-weight:600;font-size:2rem;letter-spacing:.2em;color:var(--navy)}
+  header .rule{width:70px;height:2px;background:var(--brass);margin:12px auto 10px}
+  header p{margin:0;color:var(--muted);font-size:.95rem;font-style:italic;font-family:var(--serif)}
+
+  main{flex:1;position:relative;z-index:1;width:100%;max-width:620px;margin:0 auto;padding:18px 16px 28px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:26px;box-shadow:0 1px 2px rgba(31,48,68,.05),0 12px 30px -18px rgba(31,48,68,.25);animation:rise .5s ease both}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .card h2{margin:0 0 4px;font-family:var(--serif);font-weight:600;font-size:1.35rem;color:var(--navy)}
+  .card .sub{margin:0 0 18px;color:var(--muted);font-size:.92rem}
+
+  label.l{display:block;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 7px;font-weight:600}
+  input[type=password],input[type=text],textarea{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:7px;font:inherit;background:#fff;color:var(--ink);transition:border-color .15s,box-shadow .15s}
+  textarea{min-height:130px;resize:vertical;line-height:1.5}
+  input:focus,textarea:focus{outline:0;border-color:var(--brass);box-shadow:0 0 0 3px rgba(169,134,80,.18)}
+  .pwrow{position:relative}
+  .pwrow input{padding-right:64px}
+  .eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:auto;margin:0;padding:6px 10px;background:none;color:var(--muted);font-size:.8rem;border-radius:5px}
+  .eye:hover{background:var(--brass-soft);color:var(--navy)}
+
+  button{width:100%;margin-top:16px;padding:13px;border:0;border-radius:7px;background:var(--navy);color:#fff;font:inherit;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:background .15s,transform .05s}
+  button:hover{background:var(--navy2)} button:active{transform:translateY(1px)}
+  button:disabled{opacity:.55;cursor:not-allowed}
   .msg{margin-top:12px;font-size:.9rem;min-height:1.2em}
   .err{color:var(--err)} .ok{color:var(--ok)}
-  .defs{margin-top:18px}
-  .defs .d{background:var(--card);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:4px;padding:12px 14px;margin-bottom:10px;font-size:.92rem;line-height:1.5}
+
+  /* definitions */
+  .defs{margin-top:22px;display:grid;gap:12px}
+  .d{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:16px 18px;position:relative;animation:rise .6s ease both}
+  .d:before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;background:var(--brass);border-radius:0 3px 3px 0}
+  .d .w{font-family:var(--serif);font-size:1.15rem;font-weight:700;color:var(--navy)}
+  .d .t{font-style:italic;color:var(--brass);font-size:.88rem;margin-left:8px;font-family:var(--serif)}
+  .d p{margin:6px 0 0;font-family:var(--serif);line-height:1.6;font-size:.98rem}
+
+  /* tabs */
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-6px 0 20px}
+  .tab{width:auto;margin:0;padding:11px 16px;background:none;color:var(--muted);border-radius:0;border-bottom:2px solid transparent;font-weight:600;letter-spacing:.03em}
+  .tab:hover{background:none;color:var(--navy)}
+  .tab.on{color:var(--navy);border-bottom-color:var(--brass)}
+  .tabs .sp{flex:1}
+  .tab.lockb{font-weight:500;font-size:.85rem}
+  .panel{display:none}.panel.on{display:block}
+
+  /* drop zone */
+  .drop{display:flex;align-items:center;gap:14px;border:1.5px dashed #cfc6b3;border-radius:9px;padding:16px;background:#fcfaf5;cursor:pointer;transition:all .15s}
+  .drop:hover,body.drag .drop{border-color:var(--brass);background:var(--brass-soft)}
+  .drop svg{flex:none}
+  .drop .tx{font-size:.92rem;line-height:1.45}
+  .drop .tx small{display:block;color:var(--muted);font-size:.8rem;margin-top:2px}
+  #file{display:none}
+  .chosen{display:none;align-items:center;gap:12px;margin-top:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .chosen.on{display:flex}
+  .chosen img{width:46px;height:46px;object-fit:cover;border-radius:6px;border:1px solid var(--line)}
+  .chosen .ic{width:46px;height:46px;border-radius:6px;background:var(--brass-soft);display:grid;place-items:center;color:var(--brass);font-size:.7rem;font-weight:700}
+  .chosen .nm{flex:1;min-width:0;font-size:.9rem}
+  .chosen .nm b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .chosen .nm span{color:var(--muted);font-size:.8rem}
+  .chosen button{width:auto;margin:0;padding:6px 10px;background:none;color:var(--err);font-size:.85rem}
+  .chosen button:hover{background:#f7e9e9}
+  .progress{height:6px;background:#ece6d8;border-radius:3px;margin-top:14px;overflow:hidden}
+  .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--navy),var(--brass));transition:width .2s}
+  .count{float:right;font-size:.75rem;color:var(--muted);text-transform:none;letter-spacing:0;font-weight:400}
+
+  /* keys tab */
+  .kgroup{margin-bottom:24px}
+  .kgroup h3{margin:0 0 4px;font-family:var(--serif);font-size:1.08rem;color:var(--navy)}
+  .kgroup .note{margin:0 0 10px;color:var(--muted);font-size:.88rem;line-height:1.5}
+  .krow{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:.93rem}
+  .krow:last-child{border-bottom:0}
+  .krow .k{white-space:nowrap}
+  kbd{font-family:Consolas,Menlo,monospace;font-size:.78rem;background:#f5f1e8;border:1px solid #d9d1bf;border-bottom-width:2px;border-radius:5px;padding:2px 7px;color:var(--ink)}
+  .steps{margin:0;padding:0;list-style:none;counter-reset:s}
+  .steps li{counter-increment:s;position:relative;padding:8px 0 8px 38px;font-size:.93rem;line-height:1.5}
+  .steps li:before{content:counter(s);position:absolute;left:0;top:7px;width:26px;height:26px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+  .tip{background:var(--brass-soft);border:1px solid #e6d9bd;border-radius:8px;padding:11px 13px;font-size:.88rem;line-height:1.5;margin-top:10px}
+
   .hidden{display:none}
-  .progress{height:6px;background:#e7e7e3;border-radius:3px;margin-top:12px;overflow:hidden}
-  .progress>div{height:100%;width:0;background:var(--accent);transition:width .2s}
-  .fileinfo{font-size:.82rem;color:var(--muted);margin-top:6px}
-  #bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;display:flex;flex-wrap:wrap;align-content:space-around;justify-content:space-around;padding:30px;opacity:.07}
-  #bg span{font-size:1.6rem;letter-spacing:.1em;padding:18px 22px;transform:rotate(-12deg);white-space:nowrap}
-  footer{position:relative;z-index:1;border-top:1px solid var(--line);background:var(--card);padding:16px;text-align:center;font-size:.85rem;color:var(--muted);line-height:1.7}
-  footer a{color:var(--accent);text-decoration:none;border-bottom:1px solid var(--line)}
-  footer .links a{margin:0 8px}
-  .keys{margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:.8rem;color:var(--muted);line-height:2}
-  kbd{font-family:Consolas,Menlo,monospace;font-size:.78rem;background:#f1f1ee;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;color:var(--ink)}
-  body.drag #portal .card{outline:2px dashed var(--accent)}
-  @media (max-width:700px){.keys{display:none}}
+  footer{position:relative;z-index:1;border-top:1px solid var(--line);background:var(--paper);padding:20px 16px;text-align:center;font-size:.86rem;color:var(--muted);line-height:1.8}
+  footer .links{margin-top:4px}
+  footer a{color:var(--navy);text-decoration:none;font-weight:600;border-bottom:1px solid var(--brass);margin:0 10px;padding-bottom:1px}
+  footer a:hover{color:var(--brass)}
+  body.drag #app .card{outline:2px dashed var(--brass);outline-offset:4px}
+  @media (max-width:560px){
+    header h1{font-size:1.45rem;letter-spacing:.14em}
+    .card{padding:20px 16px}
+    .krow{flex-direction:column;align-items:flex-start;gap:4px}
+    .tab{padding:10px 11px}
+  }
 </style>
 </head>
 <body>
 <div id="bg"></div>
 
 <header>
+  <svg class="crest" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <circle cx="32" cy="32" r="29" stroke="#a98650" stroke-width="1.6"/>
+    <circle cx="32" cy="32" r="24" stroke="#1f3044" stroke-width="1"/>
+    <path d="M32 14 L44 46 H38.6 L36.2 39.5 H27.8 L25.4 46 H20 L32 14Z M29.3 35 H34.7 L32 27.6 L29.3 35Z" fill="#1f3044"/>
+  </svg>
   <h1>THE ALMIGHTIES</h1>
-  <p>A private portal for trusted communication</p>
+  <div class="rule"></div>
+  <p>Trusted communication, kept private.</p>
 </header>
 
 <main>
   <!-- Lock screen -->
   <section id="lock">
     <div class="card">
-      <label for="pw">Enter Hacky's Password to unlock the portal</label>
-      <input type="password" id="pw" autocomplete="current-password" autofocus />
-      <button id="unlockBtn">Unlock</button>
+      <h2>Welcome</h2>
+      <p class="sub">Enter Hacky's Password to continue.</p>
+      <label class="l" for="pw">Password</label>
+      <div class="pwrow">
+        <input type="password" id="pw" autocomplete="current-password" autofocus />
+        <button type="button" class="eye" id="eye">Show</button>
+      </div>
+      <button id="unlockBtn">Continue</button>
       <div id="lockMsg" class="msg err"></div>
-      <div class="keys"><kbd>Enter</kbd> Unlock</div>
     </div>
     <div class="defs">
-      <div class="d" id="defAlmighty">Loading…</div>
-      <div class="d" id="defAlmighties">Loading…</div>
+      <div class="d"><span class="w">Almighty</span><span class="t">adjective</span><p id="defAlmighty">Loading…</p></div>
+      <div class="d"><span class="w">Almighties</span><span class="t">noun, plural</span><p id="defAlmighties">Loading…</p></div>
     </div>
   </section>
 
-  <!-- Portal -->
-  <section id="portal" class="hidden">
+  <!-- Main app -->
+  <section id="app" class="hidden">
     <div class="card">
-      <label for="text">Message</label>
-      <textarea id="text" placeholder="Write your message…"></textarea>
-      <div style="margin-top:14px">
-        <label for="file">Attach a file (any type, up to 50 MB)</label>
-        <input type="file" id="file" />
-        <div class="fileinfo" id="fileinfo"></div>
+      <div class="tabs" role="tablist">
+        <button class="tab on" id="tabSend" role="tab">Send</button>
+        <button class="tab" id="tabKeys" role="tab">Shortcuts</button>
+        <span class="sp"></span>
+        <button class="tab lockb" id="lockBtn">Lock</button>
       </div>
-      <div class="progress hidden" id="prog"><div id="bar"></div></div>
-      <button id="sendBtn">Send to all</button>
-      <button class="link" id="lockBtn">Lock portal</button>
-      <div id="sendMsg" class="msg"></div>
-      <div class="keys">
-        <kbd>Ctrl</kbd>+<kbd>Enter</kbd> Send &nbsp; <kbd>Alt</kbd>+<kbd>A</kbd> Attach file &nbsp;
-        <kbd>Alt</kbd>+<kbd>M</kbd> Message box &nbsp; <kbd>Alt</kbd>+<kbd>X</kbd> Lock &nbsp;
-        <kbd>Esc</kbd> Remove file &nbsp; Drag &amp; drop a file anywhere
+
+      <!-- SEND -->
+      <div class="panel on" id="pSend">
+        <label class="l" for="text">Message <span class="count" id="count">0 / 3500</span></label>
+        <textarea id="text" maxlength="3500" placeholder="Write your message here…"></textarea>
+
+        <label class="l" style="margin-top:18px">Attachment <span class="count">up to 50 MB</span></label>
+        <label class="drop" id="drop" for="file">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#a98650" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+          <span class="tx">Click to choose a file, drag &amp; drop, or paste a screenshot with <kbd>Ctrl</kbd>+<kbd>V</kbd><small>Any file type</small></span>
+        </label>
+        <input type="file" id="file" />
+        <div class="chosen" id="chosen">
+          <span id="thumb"></span>
+          <div class="nm"><b id="fname"></b><span id="fsize"></span></div>
+          <button type="button" id="rmFile">Remove</button>
+        </div>
+
+        <div class="progress hidden" id="prog"><div id="bar"></div></div>
+        <button id="sendBtn">Send to everyone</button>
+        <div id="sendMsg" class="msg"></div>
+      </div>
+
+      <!-- SHORTCUTS -->
+      <div class="panel" id="pKeys">
+        <div class="kgroup">
+          <h3>Keys on this website</h3>
+          <p class="note">Works on laptop / PC keyboards.</p>
+          <div class="krow"><span>Unlock</span><span class="k"><kbd>Enter</kbd></span></div>
+          <div class="krow"><span>Jump to the password box</span><span class="k"><kbd>/</kbd></span></div>
+          <div class="krow"><span>Send the message</span><span class="k"><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span></div>
+          <div class="krow"><span>Choose a file</span><span class="k"><kbd>Alt</kbd> + <kbd>A</kbd></span></div>
+          <div class="krow"><span>Go to the message box</span><span class="k"><kbd>Alt</kbd> + <kbd>M</kbd></span></div>
+          <div class="krow"><span>Open Send tab</span><span class="k"><kbd>Alt</kbd> + <kbd>1</kbd></span></div>
+          <div class="krow"><span>Open Shortcuts tab</span><span class="k"><kbd>Alt</kbd> + <kbd>2</kbd></span></div>
+          <div class="krow"><span>Remove the chosen file</span><span class="k"><kbd>Esc</kbd></span></div>
+          <div class="krow"><span>Lock the site</span><span class="k"><kbd>Alt</kbd> + <kbd>X</kbd></span></div>
+        </div>
+
+        <div class="kgroup">
+          <h3>Take a screenshot and send it (Windows)</h3>
+          <ol class="steps">
+            <li>Press <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>. The screen dims.</li>
+            <li>Drag with the mouse over the area you want. It is copied automatically.</li>
+            <li>Come back here and press <kbd>Ctrl</kbd> + <kbd>V</kbd>. The screenshot is attached.</li>
+            <li>Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to send.</li>
+          </ol>
+          <div class="tip">Full screen instead? Press <kbd>PrtScn</kbd>, then <kbd>Ctrl</kbd> + <kbd>V</kbd> here. Want it saved as a file? <kbd>Win</kbd> + <kbd>PrtScn</kbd> saves it in Pictures &rarr; Screenshots.</div>
+        </div>
+
+        <div class="kgroup">
+          <h3>Screenshot on Mac</h3>
+          <div class="krow"><span>Select an area and copy it</span><span class="k"><kbd>Cmd</kbd> + <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>4</kbd></span></div>
+          <div class="krow"><span>Paste it here</span><span class="k"><kbd>Cmd</kbd> + <kbd>V</kbd></span></div>
+        </div>
+
+        <div class="kgroup">
+          <h3>Screenshot on a phone</h3>
+          <p class="note">Press <b>Power + Volume Down</b> together. Then tap <b>Attach</b> here and pick the screenshot from your gallery.</p>
+        </div>
+
+        <div class="kgroup">
+          <h3>Copy &amp; paste basics</h3>
+          <div class="krow"><span>Select everything</span><span class="k"><kbd>Ctrl</kbd> + <kbd>A</kbd></span></div>
+          <div class="krow"><span>Copy</span><span class="k"><kbd>Ctrl</kbd> + <kbd>C</kbd></span></div>
+          <div class="krow"><span>Cut (copy and remove)</span><span class="k"><kbd>Ctrl</kbd> + <kbd>X</kbd></span></div>
+          <div class="krow"><span>Paste</span><span class="k"><kbd>Ctrl</kbd> + <kbd>V</kbd></span></div>
+          <div class="krow"><span>Undo</span><span class="k"><kbd>Ctrl</kbd> + <kbd>Z</kbd></span></div>
+          <div class="tip"><b>Send a file without browsing:</b> select the file in File Explorer, press <kbd>Ctrl</kbd> + <kbd>C</kbd>, come to this page and press <kbd>Ctrl</kbd> + <kbd>V</kbd>. Or simply drag the file onto this page.</div>
+        </div>
       </div>
     </div>
   </section>
@@ -103,166 +247,192 @@
 <script>
 const MAX = 50 * 1024 * 1024; // Telegram bot limit
 const $ = (id) => document.getElementById(id);
-let PW = "";
+let PW = "", CUR = null, thumbUrl = null;
 
-function showPortal(members){
-  setTimeout(()=>{ const t=document.getElementById("text"); if(t) t.focus(); },50);
+/* ---------- screens ---------- */
+const appOpen = () => !$("app").classList.contains("hidden");
+
+function showApp(members){
   $("lock").classList.add("hidden");
-  $("portal").classList.remove("hidden");
-  const bg = $("bg");
-  bg.innerHTML = "";
+  $("app").classList.remove("hidden");
+  const bg = $("bg"); bg.innerHTML = "";
   (members || []).forEach(n => {
-    for (let i = 0; i < 3; i++){
-      const s = document.createElement("span");
-      s.textContent = n;
-      bg.appendChild(s);
-    }
+    for (let i = 0; i < 3; i++){ const s = document.createElement("span"); s.textContent = n; bg.appendChild(s); }
   });
+  setTab("send");
+  setTimeout(() => $("text").focus(), 60);
 }
 function showLock(){
-  PW = "";
+  PW = ""; clearFile();
   try { sessionStorage.removeItem("pw"); } catch {}
   $("bg").innerHTML = "";
-  $("portal").classList.add("hidden");
+  $("app").classList.add("hidden");
   $("lock").classList.remove("hidden");
-  $("pw").value = "";
+  $("pw").value = ""; $("pw").focus();
 }
+function setTab(t){
+  const send = t === "send";
+  $("pSend").classList.toggle("on", send);
+  $("pKeys").classList.toggle("on", !send);
+  $("tabSend").classList.toggle("on", send);
+  $("tabKeys").classList.toggle("on", !send);
+}
+$("tabSend").onclick = () => setTab("send");
+$("tabKeys").onclick = () => setTab("keys");
+$("lockBtn").onclick = showLock;
 
+/* ---------- definitions ---------- */
 async function loadDefs(){
   try{
     const r = await fetch("/api/config");
     const d = await r.json();
-    $("defAlmighty").textContent = d.almightyDef;
-    $("defAlmighties").textContent = d.almightiesDef;
+    $("defAlmighty").textContent = d.almightyDef.replace(/^Almighty \(adjective\):\s*/i, "");
+    $("defAlmighties").textContent = d.almightiesDef.replace(/^Almighties \(noun, plural\):\s*/i, "");
   }catch{
-    $("defAlmighty").textContent = "Almighty (adjective): having complete power; unlimited in authority.";
-    $("defAlmighties").textContent = "Almighties (noun, plural): a collective united by trust and shared purpose.";
+    $("defAlmighty").textContent = "Having complete power; unlimited in authority, capability and influence.";
+    $("defAlmighties").textContent = "A collective of individuals united by trust, capability and shared purpose.";
   }
 }
 
+/* ---------- login ---------- */
 async function tryLogin(password, silent){
   try{
     const r = await fetch("/api/login", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
+      method: "POST", headers: {"Content-Type":"application/json"},
       body: JSON.stringify({password})
     });
     const d = await r.json();
-    if (!r.ok || !d.ok){
-      if (!silent) $("lockMsg").textContent = d.error || "Incorrect password.";
-      return false;
-    }
+    if (!r.ok || !d.ok){ if (!silent) $("lockMsg").textContent = d.error || "Incorrect password."; return false; }
     PW = password;
     try { sessionStorage.setItem("pw", password); } catch {}
-    showPortal(d.members);
+    showApp(d.members);
     return true;
   }catch{
-    if (!silent) $("lockMsg").textContent = "Network error. Try again.";
+    if (!silent) $("lockMsg").textContent = "Network error. Please try again.";
     return false;
   }
 }
-
 $("unlockBtn").onclick = async () => {
   $("lockMsg").textContent = "";
-  const p = $("pw").value;
-  if (!p) { $("lockMsg").textContent = "Please enter the password."; return; }
+  const p = $("pw").value.trim();
+  if (!p){ $("lockMsg").textContent = "Please enter the password."; return; }
   $("unlockBtn").disabled = true;
   await tryLogin(p, false);
   $("unlockBtn").disabled = false;
 };
 $("pw").addEventListener("keydown", e => { if (e.key === "Enter") $("unlockBtn").click(); });
-$("lockBtn").onclick = showLock;
-
-$("file").onchange = () => {
-  const f = $("file").files[0];
-  if (!f) { $("fileinfo").textContent = ""; return; }
-  const mb = (f.size / 1048576).toFixed(1);
-  if (f.size > MAX){
-    $("fileinfo").textContent = "File is " + mb + " MB — too large (max 50 MB).";
-    $("file").value = "";
-  } else {
-    $("fileinfo").textContent = f.name + " — " + mb + " MB";
-  }
+$("eye").onclick = () => {
+  const show = $("pw").type === "password";
+  $("pw").type = show ? "text" : "password";
+  $("eye").textContent = show ? "Hide" : "Show";
 };
 
+/* ---------- file handling ---------- */
+const fmt = b => b >= 1048576 ? (b/1048576).toFixed(1) + " MB" : Math.max(1, Math.round(b/1024)) + " KB";
+
+function niceName(f){
+  if (f.name && !/^image\.(png|jpe?g|gif|webp)$/i.test(f.name)) return f.name;
+  const ext = ((f.type || "image/png").split("/")[1] || "png").replace("jpeg","jpg");
+  const d = new Date(), z = n => String(n).padStart(2,"0");
+  return `screenshot-${d.getFullYear()}${z(d.getMonth()+1)}${z(d.getDate())}-${z(d.getHours())}${z(d.getMinutes())}${z(d.getSeconds())}.${ext}`;
+}
+function clearFile(){
+  CUR = null; $("file").value = "";
+  if (thumbUrl){ URL.revokeObjectURL(thumbUrl); thumbUrl = null; }
+  $("thumb").innerHTML = ""; $("chosen").classList.remove("on");
+}
+function useFile(f){
+  if (!f) return;
+  if (f.size > MAX){
+    const m = $("sendMsg"); m.className = "msg err";
+    m.textContent = "That file is " + fmt(f.size) + ". The limit is 50 MB.";
+    return;
+  }
+  $("sendMsg").textContent = "";
+  const name = niceName(f);
+  CUR = (name === f.name) ? f : new File([f], name, {type: f.type});
+  $("fname").textContent = CUR.name; $("fsize").textContent = fmt(CUR.size);
+  if (thumbUrl) URL.revokeObjectURL(thumbUrl);
+  const t = $("thumb");
+  if ((CUR.type || "").startsWith("image/")){
+    thumbUrl = URL.createObjectURL(CUR);
+    t.innerHTML = ""; const im = document.createElement("img"); im.src = thumbUrl; t.appendChild(im);
+  } else {
+    const ext = (CUR.name.split(".").pop() || "file").slice(0,4).toUpperCase();
+    t.innerHTML = ""; const d = document.createElement("div"); d.className = "ic"; d.textContent = ext; t.appendChild(d);
+  }
+  $("chosen").classList.add("on");
+}
+$("file").onchange = () => useFile($("file").files[0]);
+$("rmFile").onclick = clearFile;
+$("text").addEventListener("input", () => { $("count").textContent = $("text").value.length + " / 3500"; });
+
+/* ---------- send ---------- */
 function sendForm(fd, onProgress){
   return new Promise((resolve, reject) => {
     const x = new XMLHttpRequest();
     x.open("POST", "/api/share");
-    x.setRequestHeader("x-portal-password", PW);
+    x.setRequestHeader("x-almighty-key", PW);
     x.upload.onprogress = e => { if (e.lengthComputable) onProgress(e.loaded / e.total); };
     x.onload = () => {
-      let d = {};
-      try { d = JSON.parse(x.responseText); } catch {}
+      let d = {}; try { d = JSON.parse(x.responseText); } catch {}
       if (x.status >= 200 && x.status < 300 && d.ok) resolve(d);
-      else reject(new Error(d.error || "Send failed (" + x.status + ")"));
+      else reject(new Error(d.error || "Could not send (" + x.status + ")"));
     };
-    x.onerror = () => reject(new Error("Network error. Try again."));
+    x.onerror = () => reject(new Error("Network error. Please try again."));
     x.send(fd);
   });
 }
-
 $("sendBtn").onclick = async () => {
-  const msgEl = $("sendMsg");
-  msgEl.className = "msg"; msgEl.textContent = "";
+  const m = $("sendMsg"); m.className = "msg"; m.textContent = "";
   const message = $("text").value.trim();
-  const file = $("file").files[0];
-  if (!message && !file){ msgEl.className = "msg err"; msgEl.textContent = "Write a message or attach a file."; return; }
-
+  if (!message && !CUR){ m.className = "msg err"; m.textContent = "Write a message or attach a file."; return; }
   $("sendBtn").disabled = true;
   try{
     const fd = new FormData();
     fd.append("message", message);
-    if (file) fd.append("file", file, file.name);
-    if (file){ $("prog").classList.remove("hidden"); $("bar").style.width = "0%"; }
-    msgEl.textContent = file ? "Uploading…" : "Sending…";
+    if (CUR){ fd.append("file", CUR, CUR.name); $("prog").classList.remove("hidden"); $("bar").style.width = "0%"; }
+    m.textContent = CUR ? "Uploading…" : "Sending…";
     const d = await sendForm(fd, p => { $("bar").style.width = Math.round(p * 100) + "%"; });
-    msgEl.className = "msg ok";
-    msgEl.textContent = "Delivered to " + d.sent + " chat(s)" + (d.failed ? " (" + d.failed + " failed)" : "") + ".";
-    $("text").value = ""; $("file").value = ""; $("fileinfo").textContent = "";
+    m.className = "msg ok";
+    m.textContent = "Delivered to " + d.sent + " chat" + (d.sent === 1 ? "" : "s") + (d.failed ? " (" + d.failed + " failed)" : "") + ".";
+    $("text").value = ""; $("count").textContent = "0 / 3500"; clearFile();
   }catch(e){
-    msgEl.className = "msg err";
-    msgEl.textContent = e.message || "Something went wrong.";
+    m.className = "msg err"; m.textContent = e.message || "Something went wrong.";
   }
   $("prog").classList.add("hidden");
   $("sendBtn").disabled = false;
 };
 
-// ---------- Keyboard shortcuts (PC) ----------
-function setFile(f){
-  if (!f) return;
-  if (f.size > MAX){
-    $("fileinfo").textContent = "File is " + (f.size/1048576).toFixed(1) + " MB — too large (max 50 MB).";
+/* ---------- keyboard, drag & drop, paste ---------- */
+document.addEventListener("keydown", e => {
+  if (!appOpen()){
+    if (e.key === "/" && document.activeElement !== $("pw")){ e.preventDefault(); $("pw").focus(); }
     return;
   }
-  const dt = new DataTransfer(); dt.items.add(f); $("file").files = dt.files;
-  $("fileinfo").textContent = f.name + " — " + (f.size/1048576).toFixed(1) + " MB";
-}
-function clearFile(){ $("file").value = ""; $("fileinfo").textContent = ""; }
-const portalOpen = () => !$("portal").classList.contains("hidden");
-
-document.addEventListener("keydown", e => {
-  if (!portalOpen()) { if (e.key === "/" && document.activeElement !== $("pw")) { e.preventDefault(); $("pw").focus(); } return; }
-  if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); if (!$("sendBtn").disabled) $("sendBtn").click(); }
-  else if (e.altKey && e.key.toLowerCase() === "a") { e.preventDefault(); $("file").click(); }
-  else if (e.altKey && e.key.toLowerCase() === "m") { e.preventDefault(); $("text").focus(); }
-  else if (e.altKey && e.key.toLowerCase() === "x") { e.preventDefault(); showLock(); }
-  else if (e.key === "Escape") { clearFile(); }
+  const k = e.key.toLowerCase();
+  if (e.ctrlKey && e.key === "Enter"){ e.preventDefault(); if (!$("sendBtn").disabled) $("sendBtn").click(); }
+  else if (e.altKey && k === "a"){ e.preventDefault(); setTab("send"); $("file").click(); }
+  else if (e.altKey && k === "m"){ e.preventDefault(); setTab("send"); $("text").focus(); }
+  else if (e.altKey && k === "1"){ e.preventDefault(); setTab("send"); }
+  else if (e.altKey && k === "2"){ e.preventDefault(); setTab("keys"); }
+  else if (e.altKey && k === "x"){ e.preventDefault(); showLock(); }
+  else if (e.key === "Escape"){ clearFile(); }
 });
-["dragenter","dragover"].forEach(t => document.addEventListener(t, e => { if (portalOpen()){ e.preventDefault(); document.body.classList.add("drag"); } }));
+["dragenter","dragover"].forEach(t => document.addEventListener(t, e => { if (appOpen()){ e.preventDefault(); document.body.classList.add("drag"); } }));
 ["dragleave","drop"].forEach(t => document.addEventListener(t, e => { e.preventDefault(); document.body.classList.remove("drag"); }));
-document.addEventListener("drop", e => { if (portalOpen() && e.dataTransfer.files.length) setFile(e.dataTransfer.files[0]); });
+document.addEventListener("drop", e => {
+  if (appOpen() && e.dataTransfer.files.length){ setTab("send"); useFile(e.dataTransfer.files[0]); }
+});
 document.addEventListener("paste", e => {
-  if (!portalOpen()) return;
+  if (!appOpen()) return;
   const f = e.clipboardData && e.clipboardData.files && e.clipboardData.files[0];
-  if (f) setFile(f);
+  if (f){ e.preventDefault(); setTab("send"); useFile(f); }
 });
 
+/* ---------- start ---------- */
 loadDefs();
-try {
-  const saved = sessionStorage.getItem("pw");
-  if (saved) tryLogin(saved, true);
-} catch {}
+try { const saved = sessionStorage.getItem("pw"); if (saved) tryLogin(saved, true); } catch {}
 </script>
 </body>
 </html>

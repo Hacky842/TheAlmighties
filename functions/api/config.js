@@ -54,7 +54,7 @@ export async function saveConfig(env, cfg) {
 }
 
 export function isAuthed(request, cfg) {
-  const given = (request.headers.get("x-portal-password") || "").trim();
+  const given = (request.headers.get("x-almighty-key") || "").trim();
   return given.length > 0 && given === String(cfg.password).trim();
 }
 

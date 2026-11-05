@@ -1,6 +1,6 @@
 # TheAlmighties
 
-Formal message & file sharing portal. Cloudflare Pages + GetPantry + Telegram Bot. (No R2 / no storage needed.)
+Formal message & file sharing website. Cloudflare Pages + GetPantry + Telegram Bot. (No R2 / no storage needed.)
 Files go straight to Telegram, so max file size is 50 MB (Telegram bot limit).
 
 ## Setup
